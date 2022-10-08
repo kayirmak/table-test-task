@@ -1,0 +1,35 @@
+{
+    "data": [
+        {
+            "date": "22.03.22",
+            "name": "While",
+            "amount": 2,
+            "distance": 12
+        },
+        {
+            "date": "12.09.21",
+            "name": "Lion",
+            "amount": 3,
+            "distance": 5
+        },
+        {
+            "date": "06.01.18",
+            "name": "Tiger",
+            "amount": 1,
+            "distance": 7
+        },
+        {
+            "date": "29.06.19",
+            "name": "Panda",
+            "amount": 7,
+            "distance": 14
+        },
+        {
+            "date": "11.12.17",
+            "name": "Pantera",
+            "amount": 9,
+            "distance": 22
+        }
+    ] 
+
+}
