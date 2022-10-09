@@ -1,40 +1,57 @@
 <template>
-  <table class="table">
-    <thead class="table-thead">
-      <tr>
-        <th>Date</th>
-        <th>
-          Name
-          <Sort nameColumn="byName" :symbol="imgArrowUp" @sorted="sortTableBy($event)" />
-          <Sort nameColumn="byNameReverse" :symbol="imgArrowDown" @sorted="sortTableBy($event)" />
-        </th>
-        <th>
-          Amount
-          <Sort nameColumn="byAmount" :symbol="imgArrowUp" @sorted="sortTableBy($event)" />
-          <Sort nameColumn="byAmountReverse" :symbol="imgArrowDown" @sorted="sortTableBy($event)" />
-        </th>
-        <th>
-          Distance
-          <Sort nameColumn="byDistance" :symbol="imgArrowUp" @sorted="sortTableBy($event)" />
-          <Sort nameColumn="byDistanceReverse" :symbol="imgArrowDown" @sorted="sortTableBy($event)" />
-        </th>
-      </tr>
-    </thead>
-    <tbody class="table-tbody">
-      <tr v-for="item in renderData" :key="item.id">
-        <td>{{item.date}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.amount}}</td>
-        <td>{{item.distance}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="main">
+    <TableFilter
+      :data="data"
+      :options="options"
+      @filteredByCondition="filteredByCondition($event)"
+    />
+
+    <table class="table">
+
+      <thead class="table-thead">
+        <tr>
+          <th
+            v-for="item in options"
+            :key="item.name"
+          >
+            {{item.name}}
+            <Sort
+              v-if="item.sortColumn"
+              :nameColumn="item.sortColumn"
+              :symbol="imgArrowUp"
+              @sorted="sortTableBy($event)"
+            />
+            <Sort
+              v-if="item.sortColumn"
+              :nameColumn="item.sortColumnReverse"
+              :symbol="imgArrowDown"
+              @sorted="sortTableBy($event)"
+            />
+          </th>
+        </tr>
+      </thead>
+
+      <tbody class="table-tbody">
+        <tr
+          v-for="item in renderData"
+          :key="item.id"
+        >
+          <td>{{item.date}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.amount}}</td>
+          <td>{{item.distance}}</td>
+        </tr>
+      </tbody>
+      
+    </table>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
 import Sort from '@/components/Sort.vue'
+import TableFilter from '@/components/TableFilter'
 
 import imgArrowUp from '@/assets/img/arrow-up.png'
 import imgArrowDown from '@/assets/img/arrow-down.png'
@@ -43,15 +60,36 @@ export default {
   name: 'App-Table',
 
   components: {
-    Sort
+    Sort,
+    TableFilter
   },
 
   data() {
     return {
       url: '/all-data',
-      sortedData: [],
+      filteredData: undefined,
       imgArrowUp,
-      imgArrowDown
+      imgArrowDown,
+      options: [
+        {
+            name: 'date',
+        },
+        {
+            name: 'name',
+            sortColumn: 'byName',
+            sortColumnReverse: 'byNameReverse',
+        },
+        {
+            name: 'amount',
+            sortColumn: 'byAmount',
+            sortColumnReverse: 'byAmountReverse',
+        },
+        {
+            name: 'distance',
+            sortColumn: 'byDistance',
+            sortColumnReverse: 'byDistanceReverse',
+        }
+      ]
     }
   },
 
@@ -73,7 +111,7 @@ export default {
     },
 
     sortTableBy(name) {
-      let sortedData = [...this.data]
+      let sortedData = this.filteredData ? [...this.filteredData] : [...this.data]
       switch (name) {
         case 'byName': sortedData.sort((a, b) => this.compare(a.name, b.name))
           break;
@@ -90,17 +128,26 @@ export default {
         default:
           break;
       }
-      this.sortedData = [...sortedData]
-    }   
+      this.filteredData = [...sortedData]
+    },
+
+    filteredByCondition(filteredData) {
+      this.filteredData = filteredData
+    }
   },
 
   computed: {
     ...mapGetters({
       data: 'data'
     }),
+
     renderData() {
-      if (this.sortedData.length) {
-        return this.sortedData
+      if (this.filteredData) {
+        return this.filteredData
+      }
+      else if(typeof this.filteredData !== 'undefined') {
+        return this.filteredData
+
       }
       else return this.data
     }

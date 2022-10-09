@@ -1,12 +1,15 @@
 <template>
     <span class="table-sort">
-        <button @click="sortTableBy(nameColumn)"><img width="15px" :src="symbol" alt=""></button>
+        <button @click="sortTableBy(nameColumn)">
+            <img :src="symbol" alt="arrow">
+        </button>
     </span>
 </template>
 
 <script>
 export default {
     name: 'App-Sort',
+
     props: {
         nameColumn: {
             required: true,
@@ -17,6 +20,7 @@ export default {
             type: String
         }
     },
+    
     methods: {
         sortTableBy(name) {
             this.$emit(
@@ -36,5 +40,8 @@ export default {
     }
     .table-sort button:active {
         transform: scale(.9);
+    }
+    .table-sort button img {
+        width: 15px;
     }
 </style>
