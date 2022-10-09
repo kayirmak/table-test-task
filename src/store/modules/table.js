@@ -5,7 +5,7 @@ const state = {
 }
 
 const getters = {
-
+    data: state => state.data,
 }
 
 const mutations = {
@@ -26,11 +26,16 @@ const actions = {
     getData({commit}, url) {
         return new Promise(() => {
             GET_DATA(url).then(res => {
-                console.log(res);
                 commit('getData_success', res.data)
             })
         })
-    }
+    },
+
+    // sortTableBy(data, name) {
+    //     switch(name) {
+    //         case 'byName': data.sort()
+    //     }
+    // }
 }
 
 export default {
