@@ -96,6 +96,18 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .table-filter {
+        display: flex;
+        gap: 10px;
+        height: 40px;
+    }
+    .table-filter select, .table-filter input {
+        width: 15%;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+        outline: none;
+        text-transform: capitalize;
+    }
 </style>

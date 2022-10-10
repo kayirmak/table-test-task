@@ -42,16 +42,23 @@
           <td>{{item.distance}}</td>
         </tr>
       </tbody>
-      
+
     </table>
+    <Pagination
+      :data="this.data"
+      :limit="limit"
+      @paginatedData="paginatedData($event)"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import Sort from '@/components/Sort.vue'
+import Sort from '@/components/Sort'
 import TableFilter from '@/components/TableFilter'
+import Pagination from '@/components/Pagination'
+import { limit } from '@/helpers/vars'
 
 import imgArrowUp from '@/assets/img/arrow-up.png'
 import imgArrowDown from '@/assets/img/arrow-down.png'
@@ -61,7 +68,8 @@ export default {
 
   components: {
     Sort,
-    TableFilter
+    TableFilter,
+    Pagination
   },
 
   data() {
@@ -70,6 +78,7 @@ export default {
       filteredData: undefined,
       imgArrowUp,
       imgArrowDown,
+      limit: limit,
       options: [
         {
             name: 'date',
@@ -89,7 +98,7 @@ export default {
             sortColumn: 'byDistance',
             sortColumnReverse: 'byDistanceReverse',
         }
-      ]
+      ],
     }
   },
 
@@ -133,6 +142,10 @@ export default {
 
     filteredByCondition(filteredData) {
       this.filteredData = filteredData
+    },
+
+    paginatedData(dataOnPage) {
+      this.filteredData = dataOnPage
     }
   },
 
@@ -149,8 +162,8 @@ export default {
         return this.filteredData
 
       }
-      else return this.data
-    }
+      else return this.data.slice(0, limit)
+    },
   },
   
   mounted() {
@@ -161,7 +174,7 @@ export default {
 
 <style scoped>
   .table {
-    width: 70%;
+    width: 100%;
     margin: 0 auto;
     font-size: 30px;
     text-align: center; 
